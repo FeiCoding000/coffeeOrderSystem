@@ -19,7 +19,7 @@ export const ItemCard = ({data, onClick}) => {
         cursor: 'pointer',
     }}
     >
-        {data&&data}
+        {data}
 
         
 

@@ -11,7 +11,8 @@ export const Menu = () => {
         isIced: false,
         isClient: false,
         isDecaf: false,
-        isXhot:false
+        isXhot:false,
+        sugar: 0
     }
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -39,7 +40,7 @@ export const Menu = () => {
     }
 
     useEffect (() => {
-        console.log(drinkData, defaultData)
+        console.log("data to send, date by default", drinkData, defaultData)
     }, [drinkData])
 
     const menuItems= {
@@ -50,7 +51,7 @@ export const Menu = () => {
     ],
     "tea": [
         "English Breakfast",
-        "Eral Gray",
+        "Earl Gray",
         "Green Tea"
     ],
     "Choc&Chai": [
@@ -65,17 +66,17 @@ export const Menu = () => {
         <h1>Menu</h1>
         <h3>Coffee</h3>
         {menuItems.coffee.map((item, index) => {
-            return <ItemCard key={index} data={item} onClick={() => {handleSetDrinkType(item); handleDialogOpen()}}>item</ItemCard>
+            return <ItemCard key={index} data={item} onClick={() => {handleSetDrinkType(item); handleDialogOpen()}}></ItemCard>
         })}
         
         <h3>Tea</h3>
         {menuItems.tea.map((item, index) => {
-            return <ItemCard key={index} data={item} onClick={() => {handleSetDrinkType(item); handleDialogOpen()}}>item</ItemCard>
+            return <ItemCard key={index} data={item} onClick={() => {handleSetDrinkType(item); handleDialogOpen()}}></ItemCard>
         })}
 
         <h3>Chocolate&Chai</h3>
         {menuItems["Choc&Chai"].map((item, index) => {
-            return <ItemCard key={index} data={item} onClick={() => {handleSetDrinkType(item); handleDialogOpen()}}>item</ItemCard>
+            return <ItemCard key={index} data={item} onClick={() => {handleSetDrinkType(item); handleDialogOpen()}}></ItemCard>
         })}
 
 
