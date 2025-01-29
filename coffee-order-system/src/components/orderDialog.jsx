@@ -9,16 +9,31 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 export const OrderDialog = ({ open, close, data }) => {
-  console.log("data in the card", data);
   const formik = useFormik({
-    initialValues: data,
-    validationSchema: Yup.object({
-      name: Yup.string().required("Name is required"),
-    }),
-    onSubmit: (values) => {
-        alert(JSON.stringify(values, null, 2));
-        console.log("values", values);
+    initialValues: {
+      type: data.type ||"",
+      strength: data.strength || "",
+      milk: data.milk || "",
+      isIced: data.isIced || "",
+      isDecaf: data.isDecaf || "",
+      isClient: data.isClient || "",
+      sugar: data.sugar || "",
     },
+
+    validationSchema: Yup.object({
+      type: Yup.string().required("Required"),
+      strength: Yup.string().required("Required"),
+      milk: Yup.string().required("Required"),
+    //   isIced: Yup.string().required("Required"),
+    //   isDecaf: Yup.string().required("Required"),
+    //   isClient: Yup.string().required("Required"),
+    //   sugar: Yup.string().required("Required"),
+    }),
+
+    onSubmit: (values) => {
+      console.log(values);
+      close();
+    }
   });
 
   return (
@@ -40,27 +55,26 @@ export const OrderDialog = ({ open, close, data }) => {
             name="strength"
             value={formik.values.strength}
         >
-          Strength
-          <MenuItem value={data.strength}>{data.strength}</MenuItem>
           <MenuItem value="1/2">1/2</MenuItem>
+          <MenuItem value="1">1</MenuItem>
           <MenuItem value="2">2</MenuItem>
           <MenuItem value="3">3</MenuItem>
           <MenuItem value="4">4</MenuItem>
         </Select>
 
         <Select 
+            name="milk"
             defaultValue={data.milk}
             value={formik.values.milk}
             onChange={formik.handleChange}
             >
-            
-          Milk
-          <MenuItem value={data.milk}>{data.milk}</MenuItem>
+          <MenuItem value="Full Cream">Full Cream</MenuItem>
           <MenuItem value="Lite">Lite Milk</MenuItem>
           <MenuItem value="Oat">Oat Milk</MenuItem>
           <MenuItem value="Soy">Soy Milk</MenuItem>
           <MenuItem value="Almond">Almond Milk</MenuItem>
         </Select>
+
         <Button type="submit">Submit</Button>
 
       </form>
