@@ -1,4 +1,8 @@
 import React from "react";
+import AcUnitIcon from '@mui/icons-material/AcUnit';
+import BlockIcon from '@mui/icons-material/Block';
+import DeviceThermostatIcon from '@mui/icons-material/DeviceThermostat';
+import HailIcon from '@mui/icons-material/Hail';
 import {
   Dialog,
   DialogTitle,
@@ -36,10 +40,10 @@ export const OrderDialog = ({ open, close, type, formik }) => {
             borderColor: "grey.300",
           }}
         >
-          Order Details
+          Customize Your Order
         </DialogTitle>
 
-        <Typography variant="h6" textAlign="center" sx={{ my: 2 }}>
+        <Typography variant="h5" textAlign="center" sx={{ my: 2 }}>
           {type}
         </Typography>
 
@@ -49,8 +53,8 @@ export const OrderDialog = ({ open, close, type, formik }) => {
           <Grid container spacing={2}>
             {/* Strength */}
             <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel>Strength</InputLabel>
+              <FormControl fullWidth variant="filled">
+                <InputLabel shrink>Strength</InputLabel>
                 <Select
                   name="strength"
                   value={formik.values.strength}
@@ -67,7 +71,7 @@ export const OrderDialog = ({ open, close, type, formik }) => {
 
             {/* Milk */}
             <Grid item xs={12}>
-              <FormControl fullWidth>
+              <FormControl fullWidth variant="filled">
                 <InputLabel>Milk</InputLabel>
                 <Select
                   name="milk"
@@ -85,19 +89,22 @@ export const OrderDialog = ({ open, close, type, formik }) => {
 
             {/* Switches */}
             {[
-              { name: "isIced", label: "Iced" },
-              { name: "isDecaf", label: "Decaf" },
-              { name: "isExtraHot", label: "Extra Hot" },
-              { name: "isClient", label: "Client" },
-            ].map(({ name, label }) => (
+              { name: "isIced", label: "Iced", icon: AcUnitIcon },
+              { name: "isDecaf", label: "Decaf", icon: BlockIcon },
+              { name: "isExtraHot", label: "Extra Hot", icon: DeviceThermostatIcon },
+              { name: "isClient", label: "Client", icon: HailIcon },
+            ].map(({ name, label, icon: Icomponent }) => (
               <Grid item xs={6} key={name}>
                 <Box display="flex" alignItems="center" justifyContent="space-between">
+                  <Box display="flex" alignItems="left">
+                  <Icomponent color="secondary"/>
                   <Typography>{label}</Typography>
+                  </Box>
                   <Switch
                     name={name}
                     checked={formik.values[name]}
                     onChange={formik.handleChange}
-                    color="primary"
+                    color="secondary"
                   />
                 </Box>
               </Grid>
@@ -113,6 +120,7 @@ export const OrderDialog = ({ open, close, type, formik }) => {
                 min={0}
                 max={5}
                 step={1}
+                color="secondary"
                 valueLabelDisplay="auto"
               />
             </Grid>
@@ -123,6 +131,7 @@ export const OrderDialog = ({ open, close, type, formik }) => {
                 type="submit"
                 variant="contained"
                 size="large"
+                color="secondary"
                 sx={{
                   px: 4,
                   py: 1,
