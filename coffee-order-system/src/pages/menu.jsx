@@ -2,6 +2,15 @@ import { useState } from "react";
 import { ItemCard } from "../components/itemCard";
 import { OrderDialog } from "../components/orderDialog";
 import { useFormik } from "formik";
+import {
+  getDatabase,
+  ref,
+  set,
+  child,
+  get,
+  push,
+  update,
+} from "firebase/database";
 import { Box, Typography, Grid, Card, CardMedia, CardContent, Button } from "@mui/material";
 
 export const Menu = () => {
@@ -38,6 +47,21 @@ export const Menu = () => {
     formik.setFieldValue("type", type);
   };
 
+    //get data--order number
+    const deRef = ref(getDatabase());
+    const getOrderNumber = get(child(deRef, "Order Number"))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          console.log("number in database:",snapshot.val());
+          return snapshot.val();
+        } else {
+          console.log("No data available");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
   // 设置 Formik
   const formik = useFormik({
     initialValues: {
@@ -50,8 +74,19 @@ export const Menu = () => {
       isExtraHot: false,
       isClient: false,
     },
-    onSubmit: (values) => {
+    onSubmit:async (values) => {
       console.log("Submitted values:", values);
+      const orderNumber = await getOrderNumber;
+      const newOrderNumber = parseInt(orderNumber) + 1;
+      set(ref(getDatabase(), `Orders/${newOrderNumber}`), values)
+        .then(() => {
+          console.log("Data submitted successfully");
+        })
+        .catch((error) => {
+          console.error("Error submitting data:", error);
+          alert("Network error, please try again later！")
+        })
+      set(ref(getDatabase(), `Order Number`), newOrderNumber);
       formik.resetForm();
       handleDialogClose();
     },
