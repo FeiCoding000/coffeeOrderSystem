@@ -1,106 +1,142 @@
-import React, { useCallback } from "react";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
-import { Switch, Slider } from "@mui/material";
+import React from "react";
+import {
+  Dialog,
+  DialogTitle,
+  TextField,
+  Select,
+  MenuItem,
+  Button,
+  Box,
+  Switch,
+  Slider,
+  Typography,
+  Grid,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 
 export const OrderDialog = ({ open, close, type, formik }) => {
-  console.log("Type in component:", type);
-
   return (
-    <Dialog open={open} onClose={close}>
-      <DialogTitle>Order Details</DialogTitle>
-
-      {type}
-
-      <form onSubmit={formik.handleSubmit}>
-        <input
-          type="hidden"
-          onChange={formik.handleChange}
-          name="type"
-          value={type}
-        ></input>
-
-        <Select
-          onChange={formik.handleChange}
-          name="strength"
-          value={formik.values.strength}
+    <Dialog open={open} onClose={close} maxWidth="sm" fullWidth>
+      <Box
+        sx={{
+          p: 3,
+          borderRadius: 2,
+          bgcolor: "background.paper",
+          color: "text.primary",
+          boxShadow: 3,
+        }}
+      >
+        <DialogTitle
+          sx={{
+            fontWeight: "bold",
+            textAlign: "center",
+            pb: 2,
+            borderBottom: "1px solid",
+            borderColor: "grey.300",
+          }}
         >
-          <MenuItem value="1/2">1/2</MenuItem>
-          <MenuItem value="1">1</MenuItem>
-          <MenuItem value="2">2</MenuItem>
-          <MenuItem value="3">3</MenuItem>
-          <MenuItem value="4">4</MenuItem>
-        </Select>
+          Order Details
+        </DialogTitle>
 
-        <Select
-          name="milk"
-          value={formik.values.milk}
-          onChange={formik.handleChange}
-        >
-          <MenuItem value="Full Cream">Full Cream</MenuItem>
-          <MenuItem value="Lite">Lite Milk</MenuItem>
-          <MenuItem value="Oat">Oat Milk</MenuItem>
-          <MenuItem value="Soy">Soy Milk</MenuItem>
-          <MenuItem value="Almond">Almond Milk</MenuItem>
-        </Select>
-        
-        <Switch
-            name="isIced"
-            value={formik.values.isIced}
-            onChange={formik.handleChange}
-            checked={formik.values.isIced}
-            color="primary"
-            inputProps={{ 'aria-label': 'primary checkbox' }}
-        >
-        </Switch>
+        <Typography variant="h6" textAlign="center" sx={{ my: 2 }}>
+          {type}
+        </Typography>
 
-        <Switch
-            name="isDecaf"
-            value={formik.values.isDecaf}
-            onChange={formik.handleChange}
-            checked={formik.values.isDecaf}
-            color="primary"
-            inputProps={{ 'aria-label': 'primary checkbox' }}
-        >
-        </Switch>
+        <form onSubmit={formik.handleSubmit}>
+          <input type="hidden" name="type" value={type} />
 
-        <Switch
-            name="isExtraHot"
-            value={formik.values.isExtraHot}
-            onChange={formik.handleChange}
-            checked={formik.values.isExtraHot}
-            color="primary"
-            inputProps={{ 'aria-label': 'primary checkbox' }}
-        >
-        </Switch>
+          <Grid container spacing={2}>
+            {/* Strength */}
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel>Strength</InputLabel>
+                <Select
+                  name="strength"
+                  value={formik.values.strength}
+                  onChange={formik.handleChange}
+                >
+                  {[1 / 2, 1, 2, 3, 4].map((val) => (
+                    <MenuItem key={val} value={val}>
+                      {val}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
 
-        <Switch
-            name="isClient"
-            value={formik.values.isClient}
-            onChange={formik.handleChange}
-            checked={formik.values.isClient}
-            color="primary"
-            inputProps={{ 'aria-label': 'primary checkbox' }}
-        >
-        </Switch>
+            {/* Milk */}
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel>Milk</InputLabel>
+                <Select
+                  name="milk"
+                  value={formik.values.milk}
+                  onChange={formik.handleChange}
+                >
+                  {["Full Cream", "Lite", "Oat", "Soy", "Almond", "None"].map((milk) => (
+                    <MenuItem key={milk} value={milk}>
+                      {milk}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
 
-        <Slider
-            name="sugar"
-            value={formik.values.sugar}
-            onChange={formik.handleChange}
-            min={0}
-            max={5}
-            step={1}
-            aria-labelledby="discrete-slider-small-steps"
-            valueLabelDisplay="auto"
-        ></Slider>
+            {/* Switches */}
+            {[
+              { name: "isIced", label: "Iced" },
+              { name: "isDecaf", label: "Decaf" },
+              { name: "isExtraHot", label: "Extra Hot" },
+              { name: "isClient", label: "Client" },
+            ].map(({ name, label }) => (
+              <Grid item xs={6} key={name}>
+                <Box display="flex" alignItems="center" justifyContent="space-between">
+                  <Typography>{label}</Typography>
+                  <Switch
+                    name={name}
+                    checked={formik.values[name]}
+                    onChange={formik.handleChange}
+                    color="primary"
+                  />
+                </Box>
+              </Grid>
+            ))}
 
-        <Button type="submit">Submit</Button>
-      </form>
+            {/* Sugar Slider */}
+            <Grid item xs={12}>
+              <Typography gutterBottom>Sugar</Typography>
+              <Slider
+                name="sugar"
+                value={formik.values.sugar}
+                onChange={formik.handleChange}
+                min={0}
+                max={5}
+                step={1}
+                valueLabelDisplay="auto"
+              />
+            </Grid>
+
+            {/* Submit Button */}
+            <Grid item xs={12} textAlign="center">
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
+                sx={{
+                  px: 4,
+                  py: 1,
+                  fontSize: "1rem",
+                  fontWeight: "bold",
+                  borderRadius: 2,
+                }}
+              >
+                Submit
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </Box>
     </Dialog>
   );
 };

@@ -1,28 +1,22 @@
-import { useEffect, useState } from "react";
-import React from "react";
+import { useState } from "react";
 import { ItemCard } from "../components/itemCard";
 import { OrderDialog } from "../components/orderDialog";
 import { useFormik } from "formik";
-import { Box, Typography } from "@mui/material";
-import * as Yup from "yup";
+import { Box, Typography, Grid, Card, CardMedia, CardContent, Button } from "@mui/material";
 
 export const Menu = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  //handle dialog open and close
-  const handleDialogOpen = () => {
-    setIsDialogOpen(true);
-  };
-  const handleDialogClose = () => {
-    setIsDialogOpen(false);
-  };
+  // 处理对话框开关
+  const handleDialogOpen = () => setIsDialogOpen(true);
+  const handleDialogClose = () => setIsDialogOpen(false);
 
-  //formik setValue to formik.type
+  // 处理 Formik 类型
   const handleFormikType = (type) => {
     formik.setFieldValue("type", type);
   };
 
-  //set up formik
+  // 设置 Formik
   const formik = useFormik({
     initialValues: {
       type: "",
@@ -41,81 +35,60 @@ export const Menu = () => {
     },
   });
 
+  // 菜单项
   const menuItems = {
-    coffee: ["Flat White", "Latte", "Long Black"],
+    coffee: ["Flat White", "Latte", "Long Black", "Espresso", "Long Macchiato", "Mocha", "Short Macchiato", "Cappuccino", "Dirty Chai", "Piccolo"],
     tea: ["English Breakfast", "Earl Gray", "Green Tea"],
-    "Choc&Chai": ["Choclate", "Chai"],
+    "Choc&Chai": ["Chocolate", "Chai"],
   };
 
   return (
-    <div>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 2,
-        }}
-      >
-        <h1>Menu</h1>
-        <Typography>Coffee</Typography>
-        <Box sx={{ display: "flex", flexWrap: "wrap" }} gap={2}>
-          {menuItems.coffee.map((item, index) => {
-            return (
-              <ItemCard
-                key={index}
-                data={item}
-                onClick={() => {
-                  handleFormikType(item);
-                  handleDialogOpen();
-                }}
-              ></ItemCard>
-            );
-          })}
-        </Box>
+    <Box sx={{ textAlign: "center", py: 4, bgcolor: "black", minHeight: "100vh" }}>
+      <Typography variant="h3" sx={{ fontWeight: "bold", mb: 4 }}>Menu</Typography>
 
-        <Typography>Tea</Typography>
-        <Box
-          sx={{ display: "flex", flexWrap: "wrap", alignContent: "left" }}
-          gap={2}
-        >
-          {menuItems.tea.map((item, index) => {
-            return (
-              <ItemCard
-                key={index}
-                data={item}
-                onClick={() => {
-                  handleFormikType(item);
-                  handleDialogOpen();
-                }}
-              ></ItemCard>
-            );
-          })}
-        </Box>
+      {Object.keys(menuItems).map((category) => (
+        <Box key={category} sx={{ mb: 4 }}>
+          <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>
+            {category === "Choc&Chai" ? "Chocolate & Chai" : category}
+          </Typography>
 
-        <Typography>Chocolate&Chai</Typography>
-        <Box sx={{ display: "flex", flexWrap: "wrap" }} gap={2}>
-          {menuItems["Choc&Chai"].map((item, index) => {
-            return (
-              <ItemCard
-                key={index}
-                data={item}
-                onClick={() => {
-                  handleFormikType(item);
-                  handleDialogOpen();
-                }}
-              ></ItemCard>
-            );
-          })}
+          <Grid container spacing={3} justifyContent="center">
+            {menuItems[category].map((item, index) => (
+              <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+                <Card
+                  sx={{
+                    borderRadius: 2,
+                    overflow: "hidden",
+                    transition: "transform 0.2s",
+                    "&:hover": { transform: "scale(1.02)" },
+                  }}
+                  onClick={() => {
+                    handleFormikType(item);
+                    handleDialogOpen();
+                  }}
+                >
+                  {/* 图片部分 */}
+                  <CardMedia
+                    component="img"
+                    height="150"
+                    image={`https://images.immediate.co.uk/production/volatile/sites/30/2020/08/dalgona-coffee-ddfc357.jpg?quality=90&webp=true&resize=440,400`}
+                    alt={item}
+                  />
+                  {/* 文字部分 */}
+                  <CardContent sx={{ bgcolor: "white", p: 2 }}>
+                    <Typography variant="h6">{item}</Typography>
+                    <Button variant="contained" fullWidth sx={{ mt: 1 }}>
+                      Order Now
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
         </Box>
-      </Box>
+      ))}
 
-      <OrderDialog
-        open={isDialogOpen}
-        close={handleDialogClose}
-        type={formik.values.type}
-        formik={formik}
-      ></OrderDialog>
-    </div>
+      <OrderDialog open={isDialogOpen} close={handleDialogClose} type={formik.values.type} formik={formik} />
+    </Box>
   );
 };
